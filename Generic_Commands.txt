@@ -1,0 +1,42 @@
+build.gradle
+
+plugins {
+    id "war"
+    id "com.palantir.docker" version "0.22.1"
+    id "com.palantir.docker-run" version "0.22.1" 
+}
+
+version '0.1.0' // not necessary i think
+
+docker {
+     name "${project.name}:${project.version}" // name gradle_image
+     files 'challenge.war' // or path to challenge.war
+}
+// challenge.war is the name of the artifact created
+dockerRun {
+    name "${project.name}" // name gradle_container
+    image "${project.name}:${project.version}" // image gradle_image
+    ports '8003:8080'
+    clean true
+}
+
+
+=================================================================================
+Dockerfile
+
+FROM tomcat
+COPY build/libs/*.war /usr/local/tomcat/webapps/gradle.war
+
+===================================================================================
+index.jsp
+
+<html>
+<body>
+  <h2>This is deployment</h2>
+</body>
+</html>
+
+========================================================================================
+root project name : challenge
+
+build/libs/challenge.war
